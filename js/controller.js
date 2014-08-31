@@ -57,10 +57,10 @@
       if (this.turn % 8 === 0) {
         this.createFlowers();
       }
-      R = 0.6 + 0.4 * (Math.abs(360 - this.turn % 720) / 360.0);
+      R = 0.3 + 0.7 * (Math.abs(360 - this.turn % 720) / 360.0);
       this.directionalLight.color.r = R;
       this.directionalLight.color.g = R - 0.1;
-      this.directionalLight.color.r = R + 0.2;
+      this.directionalLight.color.r = 1 - R;
       this.renderer.render(this.scene, this.camera);
       return this.turn++;
     };

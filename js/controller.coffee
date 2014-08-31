@@ -47,11 +47,11 @@ class @Game
     if @turn % 8 == 0
       @createFlowers()
 
-    R = 0.6 + 0.4 * (Math.abs(360 - @turn % 720) / 360.0)
+    R = 0.3 + 0.7 * (Math.abs(360 - @turn % 720) / 360.0)
 #    @directionalLight.setHex(new THREE.color(R, R - 0.1, R + 0.1))
     @directionalLight.color.r = R
     @directionalLight.color.g = R - 0.1
-    @directionalLight.color.r = R + 0.2
+    @directionalLight.color.r = 1 - R
 
     @renderer.render(@scene, @camera)
     @turn++
