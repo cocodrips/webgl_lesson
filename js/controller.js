@@ -26,6 +26,9 @@
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       this.renderer.setClearColorHex(0xffffff, 1);
       document.body.appendChild(this.renderer.domElement);
+      this.directionalLight = new THREE.DirectionalLight(0xffccff, 10);
+      this.directionalLight.position.set(1, 50, 5);
+      this.scene.add(this.directionalLight);
       this.camera.position.z = 5;
       return this.createFlowers();
     };
@@ -41,7 +44,7 @@
     };
 
     Game.prototype.render = function() {
-      var flower, _i, _len, _ref,
+      var R, flower, _i, _len, _ref,
         _this = this;
       requestAnimationFrame(function() {
         return _this.render();
@@ -51,11 +54,19 @@
         flower = _ref[_i];
         flower.update(this.isUp);
       }
-      if (this.turn % 30 === 0) {
+      if (this.turn % 8 === 0) {
         this.createFlowers();
       }
+      R = 0.6 + 0.4 * (Math.abs(360 - this.turn % 720) / 360.0);
+      this.directionalLight.color.r = R;
+      this.directionalLight.color.g = R - 0.1;
+      this.directionalLight.color.r = R + 0.2;
       this.renderer.render(this.scene, this.camera);
       return this.turn++;
+    };
+
+    Game.prototype.cameraX = function() {
+      return this.camera.lookAt.x += 1;
     };
 
     Game.prototype.toggleUp = function() {
@@ -68,23 +79,29 @@
 
   this.Flower = (function() {
     function Flower(x, scale, speed) {
-      var geometry, material;
+      var f_texture, geometry, material;
       this.speed = speed;
-      geometry = new THREE.CubeGeometry(scale, scale, 0.01);
-      material = new THREE.MeshBasicMaterial({
-        color: 0x00ff00
+      f_texture = new THREE.ImageUtils.loadTexture('image/f.png');
+      geometry = new THREE.CubeGeometry(scale, scale, 0.00001);
+      material = new THREE.MeshPhongMaterial({
+        map: f_texture
       });
+      material.transparent = true;
+      material.opacity = 0.3 + Math.random() * 0.7;
+      material.ambient = new THREE.Color(0, 0, 0);
       this.flower = new THREE.Mesh(geometry, material);
       this.flower.position.x = x;
       this.flower.position.y = 5;
+      this.flower.position.z = scale * 0.01;
     }
 
     Flower.prototype.update = function(isUp) {
       if (!isUp) {
-        this.flower.rotation.z += 0.03;
+        this.flower.rotation.z -= 0.03;
+        this.flower.position.x -= 0.002;
         return this.flower.position.y -= this.speed;
       } else {
-        this.flower.rotation.z -= 0.03;
+        this.flower.rotation.z += 0.03;
         return this.flower.position.y += this.speed;
       }
     };
