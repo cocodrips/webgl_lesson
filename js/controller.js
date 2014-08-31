@@ -17,12 +17,13 @@
     }
 
     Game.prototype.start = function() {
-      var geometry, material;
+      var f_texture, geometry, material;
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(this.renderer.domElement);
+      f_texture = new THREE.ImageUtils.loadTexture('image/f.png');
       geometry = new THREE.CubeGeometry(1, 1, 1);
-      material = new THREE.MeshBasicMaterial({
-        color: 0x00ff00
+      material = new THREE.MeshPhongMaterial({
+        map: f_texture
       });
       this.cube = new THREE.Mesh(geometry, material);
       this.scene.add(this.cube);
